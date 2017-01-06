@@ -1,0 +1,76 @@
+
+import tflearn
+from tflearn.layers.conv import conv_2d, max_pool_2d
+from tflearn.layers.core import input_data, dropout, fully_connected
+from tflearn.layers.estimator import regression
+import tflearn.datasets.mnist as mnist
+
+
+# why abstraction layers?
+# - for simplicity
+# - less error prone when using a high level framework
+
+MODEL_SAVE_PATH = 'C:\\ML_Data'
+MODEL_SAVE_NAME = 'tflearn_convolutional neural network.model'
+
+X, Y, test_x, test_y = mnist.load_data(one_hot=True)
+
+X = X.reshape([-1,28,28,1])
+test_x = test_x.reshape([-1,28,28,1])
+
+convnet = input_data(shape=[None,28,28,1], name='input')
+
+# do our 1st convolution and max pool
+#
+convnet1 = conv_2d(convnet, 32, 2, activation='relu')
+max_pool1 = max_pool_2d(convnet1, 2)
+
+# do our 2nd convolution and max pool
+#
+convnet2 = conv_2d(max_pool1, 64, 2, activation='relu')
+max_pool2 = max_pool_2d(convnet2, 2)
+
+# now our fully connected layer:
+#
+fc = fully_connected(max_pool2, 1024, activation='relu')
+
+# now for the dropout
+#
+drop_out = dropout(fc, 0.8)
+
+# now for the output layer, which is also a
+# fully connected layer
+#
+output = fully_connected(drop_out, 10, activation='softmax')
+
+regress = regression(output, 
+                     optimizer='adam', 
+                     learning_rate=0.01, 
+                     loss='categorical_crossentropy', 
+                     name='targets')
+
+model = tflearn.DNN(regress)
+
+'''
+model.fit({'input':X}, {'targets':Y},
+          n_epoch=1, 
+          validation_set=({'input':test_x}, {'targets':test_y}),
+          snapshot_step=500,
+          show_metric=True,
+          run_id='mnist')
+
+
+# save out our model weight values for later use
+#
+model.save(MODEL_SAVE_PATH + MODEL_SAVE_NAME)
+'''
+
+model.load(MODEL_SAVE_PATH + MODEL_SAVE_NAME)
+
+print( model.predict([test_x[1]]) )
+
+
+# results:
+#
+# Training Step: 2535  | total loss: 0.06605
+# | Adam | epoch: 002 | loss: 0.06605 - acc: 0.9839 -- iter: 52160/55000
