@@ -70,7 +70,7 @@ model.load(MODEL_SAVE_PATH + MODEL_SAVE_NAME)
 print( model.predict([test_x[1]]) )
 
 
-# results:
+# Prediction results:
 #
 # Training Step: 2535  | total loss: 0.06605
 # | Adam | epoch: 002 | loss: 0.06605 - acc: 0.9839 -- iter: 52160/55000
