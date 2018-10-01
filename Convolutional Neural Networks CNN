@@ -63,7 +63,7 @@ model.fit({'input':X}, {'targets':Y},
 
 
 # save out our model weight values for later use
-#
+# 
 model.save(MODEL_SAVE_PATH + MODEL_SAVE_NAME)
 '''
 
