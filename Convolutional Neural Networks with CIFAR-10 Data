@@ -82,7 +82,7 @@ network = regression(network, optimizer='adam',
                      loss='categorical_crossentropy',
                      learning_rate=0.001)
 
-# Train using classifier
+# Train using classifier 
 model = tflearn.DNN(network, tensorboard_verbose=0)
 
 model.fit(X, Y, n_epoch=1, shuffle=True, validation_set=(X_test, Y_test),
